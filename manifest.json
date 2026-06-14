@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-google-tasks",
-	"name": "Google Tasks",
+	"id": "obsidian-google-tasks-tasknotes",
+	"name": "Google Tasks TaskNotes Importer",
 	"version": "2.0.0",
-	"minAppVersion": "1.7.2",
-	"description": "Interact with your Google Tasks from Inside Obsidian",
-	"author": "Forked by enniojalapeno",
-	"authorUrl": "https://github.com/enniojalapeno",
+	"minAppVersion": "0.12.0",
+	"description": "Import your Google Tasks into Obsidian using TaskNotes style",
+	"author": "AndrewMckaskill",
+	"authorUrl": "https://github.com/AndrewMckaskill",
 	"isDesktopOnly": false
 }

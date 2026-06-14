@@ -6,7 +6,7 @@ on:
             - "*"
 
 env:
-    PLUGIN_NAME: google-tasks
+    PLUGIN_NAME: obsidian-google-tasks-tasknotes
 
 jobs:
     build:

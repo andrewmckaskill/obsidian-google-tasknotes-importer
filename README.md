@@ -1,10 +1,8 @@
-# Obsidian Google Tasks
+# Obsidian Google Tasks TaskNotes Importer
 
-Manage your Google Tasks from inside Obsidian
+Import your Google Tasks into Obsidian using TaskNotes style
 
-
-# Please make sure to install the latest version of this plugin (at least 1.5.0) to prevent a potential corruption of your attachments (Sorry 🙇‍♂️) Thank you to @carlosrusso. 
-
+This is a fork of the original (obsidian-google-tasks)[https://github.com/YukiGasai/obsidian-google-tasks] plugin by YukiGasai, with various changes added from other forks.
 
 ## Features
 

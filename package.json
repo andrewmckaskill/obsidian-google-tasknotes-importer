@@ -1,7 +1,7 @@
 {
-	"name": "google-tasks",
+	"name": "obsidian-google-tasks-tasknotes",
 	"version": "2.0.0",
-	"description": "Interact with your Google Tasks from Inside Obsidian",
+	"description": "Import your Google Tasks into Obsidian using TaskNotes style",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
