@@ -81,7 +81,7 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 					button.setButtonText("Login");
 					button.onClick(async () => {
 						if (settingsAreCorrect(this.plugin)) {
-							LoginGoogle(this.plugin);
+							LoginGoogle(this.plugin).then(refreshTaskLists);
 
 							let count = 0;
 							const intId = setInterval(() => {
@@ -145,15 +145,20 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 			ctrl.selectEl.empty()
 
 			if (!settingsAreCompleteAndLoggedIn(this.plugin)) {
+				ctrl.selectEl.empty();
 				ctrl.addOption(this.plugin.settings.importTaskList, "Login first")
 				return
 			}
 
-			const tasks = {};
+			const tasks: { [index:string]: string } = {};
 			const taskLists = await getAllTaskLists(this.plugin)
 			for (const taskList of taskLists) {
 				tasks[taskList.id] = taskList.title;
 			}
+			if (this.plugin.settings.importTaskList === "") {
+				this.plugin.settings.importTaskList = taskLists[0].id
+			}
+			ctrl.selectEl.empty()
 			ctrl.addOptions(tasks)
 		}
 

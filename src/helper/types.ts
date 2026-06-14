@@ -4,6 +4,7 @@ export interface GoogleTasksSettings {
 	googleClientSecret: string;
 	importTaskList: string;
 	askConfirmation: boolean;
+	completeOnImport: boolean;
 	refreshInterval: number;
 	showNotice: boolean;
 	twoWaySync: boolean;

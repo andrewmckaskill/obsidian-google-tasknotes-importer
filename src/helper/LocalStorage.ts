@@ -1,26 +1,27 @@
+const prefix = (varName: string): string => {
+  return `${app.appId}-google-tasks-tasknotes-${varName}`;
+}
+
 export const getAT = (): string => {
-	return window.localStorage.getItem("googleTaskAccessToken") ?? "";
+	return window.localStorage.getItem(prefix("accessToken")) ?? "";
+};
+export const setAT = (googleAccessToken: string) => {
+	window.localStorage.setItem(prefix("accessToken"), googleAccessToken);
 };
 
 export const getET = (): number => {
 	const expirationTimeString =
-		window.localStorage.getItem("googleTaskExpirationTime") ?? "0";
+		window.localStorage.getItem(prefix("expirationTime")) ?? "0";
 	return parseInt(expirationTimeString, 10);
 };
 
-export const setAT = (googleAccessToken: string) => {
-	window.localStorage.setItem("googleTaskAccessToken", googleAccessToken);
-};
 
 export const setET = (googleExpirationTime: number) => {
-	window.localStorage.setItem(
-		"googleTaskExpirationTime",
-		googleExpirationTime + ""
-	);
+	window.localStorage.setItem(prefix("expirationTime"),googleExpirationTime + "");
 };
 
 export const ClearTokens = () => {
-	window.localStorage.removeItem("googleTaskAccessToken");
-	window.localStorage.removeItem("googleTaskRefreshToken");
-	window.localStorage.removeItem("googleTaskExpirationTime");
+	window.localStorage.removeItem(prefix("accessToken"));
+	window.localStorage.removeItem(prefix("refreshToken"));
+	window.localStorage.removeItem(prefix("expirationTime"));
 };
