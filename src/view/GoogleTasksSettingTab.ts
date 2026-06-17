@@ -12,7 +12,6 @@ import { customSetting } from "../helper/CustomSettingElement";
 import { LoginGoogle } from "../googleApi/GoogleAuth";
 import type GoogleTasks from "../GoogleTasksPlugin";
 import { getAllTaskLists } from "../googleApi/ListAllTasks";
-import { GoogleTaskView, VIEW_TYPE_GOOGLE_TASK } from "./GoogleTaskView";
 import { ClearTokens } from "../helper/LocalStorage";
 
 export class GoogleTasksSettingTab extends PluginSettingTab {
@@ -113,17 +112,6 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 				);
 		}
 
-		new Setting(containerEl)
-			.setName("Two-way sync")
-			.setDesc("Automatically sync embedded task checkboxes to Google Tasks")
-			.addToggle((toggle) => {
-				toggle.setValue(this.plugin.settings.twoWaySync);
-				toggle.onChange(async (state) => {
-					this.plugin.settings.twoWaySync = state;
-					await this.plugin.saveSettings();
-				});
-			});
-
 		const taskListSetting = new Setting(containerEl)
 			.setName("Task List To Import From")
 			.setDesc("Select the task list to import tasks from")
@@ -137,9 +125,6 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 			})
 
 		const refreshTaskLists = async () => {
-			// taskListSetting.components.forEach((component) => {
-			// 	taskListSetting.components.remove(component)
-			// });
 			const ctrl = taskListSetting.components[0] as DropdownComponent
 
 			ctrl.selectEl.empty()
@@ -161,17 +146,6 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 			ctrl.selectEl.empty()
 			ctrl.addOptions(tasks)
 		}
-
-		new Setting(containerEl)
-			.setName("Confirmations")
-			.setDesc("Ask for confirmations when deleting a task")
-			.addToggle((toggle) => {
-				toggle.setValue(this.plugin.settings.askConfirmation);
-				toggle.onChange(async (state) => {
-					this.plugin.settings.askConfirmation = state;
-					await this.plugin.saveSettings();
-				});
-			});
 
 		new Setting(containerEl)
 			.setName("Notifications")
@@ -198,13 +172,13 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 			this.plugin.settings.refreshInterval = parseInt(
 				RefreshIntervalInput.value
 			);
-			this.app.workspace
-				.getLeavesOfType(VIEW_TYPE_GOOGLE_TASK)
-				.forEach((leaf) => {
-					if (leaf.view instanceof GoogleTaskView) {
-						leaf.view.setRefreshInterval();
-					}
-				});
+			// this.app.workspace
+			// 	.getLeavesOfType(VIEW_TYPE_GOOGLE_TASK)
+			// 	.forEach((leaf) => {
+			// 		if (leaf.view instanceof GoogleTaskView) {
+			// 			leaf.view.setRefreshInterval();
+			// 		}
+			// 	});
 			await this.plugin.saveSettings();
 		});
 
