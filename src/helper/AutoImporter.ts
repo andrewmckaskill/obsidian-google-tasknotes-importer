@@ -1,6 +1,6 @@
-import GoogleTasks from "src/GoogleTasksPlugin";
+import GoogleTasks from "../GoogleTasksPlugin";
 import { importTasks } from "./ImportTasks";
-import { settingsAreCompleteAndLoggedIn } from "src/view/GoogleTasksSettingTab";
+import { settingsAreCompleteAndLoggedIn } from "../view/GoogleTasksSettingTab";
 import { PLUGIN_ID } from "./types";
 
 
