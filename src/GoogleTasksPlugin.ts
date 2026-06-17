@@ -9,6 +9,9 @@ import {
 	settingsAreCompleteAndLoggedIn,
 } from "./view/GoogleTasksSettingTab";
 import { taskToList } from './helper/TaskToList';
+import { TaskNotesBridge } from "./helper/TaskNotesBridge";
+import { randomUUID } from "crypto";
+import { taskToTaskNote } from "./helper/TaskToTaskNote";
 
 
 const DEFAULT_SETTINGS: GoogleTasksSettings = {
@@ -26,13 +29,53 @@ const DEFAULT_SETTINGS: GoogleTasksSettings = {
 export default class GoogleTasks extends Plugin {
 	settings!: GoogleTasksSettings;
 	plugin!: GoogleTasks;
+	taskNotes!: TaskNotesBridge;
 	showHidden = false;
 	
 
 	async onload() {
 		await this.loadSettings();
 		this.plugin = this;
+		this.taskNotes = new TaskNotesBridge(this.app);
 		
+		const createTaskNotes = async () => {
+			if (!this.taskNotes.available) {
+				console.log(`${PLUGIN_ID}: tasknotes not available`)
+				return
+			}
+
+			const tasks = await getAllTasksFromList(this, this.plugin.settings.importTaskList, null, null, false)
+			const notes: Record<string, unknown>[] = tasks.map(taskToTaskNote)
+
+			
+			for (let index = 0; index < notes.length; index++) {
+				const note = notes[index];
+				await this.taskNotes.createTask(note, {
+						source: PLUGIN_ID,
+						correlationId: randomUUID()
+				})
+			}
+
+			if (this.plugin.settings.completeOnImport) {
+				tasks.forEach((task) => {
+					console.log(`${PLUGIN_ID}: deleting task ${task.id}: ${task.title}`)
+					GoogleCompleteTask(this, task);
+				})
+			}
+			else {
+				console.log(`${PLUGIN_ID}: skipping delete`)
+			} 
+
+			if (notes.length == 0) {
+				new Notice("No tasks to import")
+				return;
+			}
+			else {
+				new Notice(`${notes.length} tasks imported`)
+				return;
+			}
+		};
+
 		const writeTodoIntoFile = async (editor: Editor) => {
 			const tasks = await getAllTasksFromList(this, this.plugin.settings.importTaskList, null, null, false)
 			const taskLines = tasks.map(taskToList)
@@ -61,6 +104,21 @@ export default class GoogleTasks extends Plugin {
 				console.log(`${PLUGIN_ID}: skipping delete`)
 			} 
 		};
+
+		this.addCommand({
+			id: "import-google-tasks-to-tasknotes",
+			name: "Import Google Tasks to TaskNotes",
+
+			callback: () => {
+
+				if (!settingsAreCompleteAndLoggedIn(this, true))
+					return;
+
+				createTaskNotes();
+
+			},
+		});
+
 
 		this.addCommand({
 			id: "insert-uncompleted-google-tasks",
