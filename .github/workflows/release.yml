@@ -1,5 +1,8 @@
 name: Release Obsidian plugin
 
+permissions:
+    contents: write # Required for creating releases
+
 on:
     push:
         tags:
