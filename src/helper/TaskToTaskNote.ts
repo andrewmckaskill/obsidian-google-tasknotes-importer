@@ -1,21 +1,23 @@
 import { moment } from "obsidian";
-import type { Task } from "./types";
+import type { GoogleTasksSettings, Task } from "./types";
 
-export const taskToTaskNote = (task: Task): Record<string, unknown> => {
+export const taskToTaskNote = (settings: GoogleTasksSettings, task: Task): Record<string, unknown> => {
     const elements: Record<string, unknown> = {}
     elements.title = task.title;
     elements.status = "open";
-    elements["google-task-id"] = `https://tasks.google.com#id=${task.id}`
+    if (settings.googleTaskIdProperty) {
+        elements[settings.googleTaskIdProperty] = task.webViewLink;
+    }
     if (task.due) {
         elements["due"] = moment.utc(task.due).local().format("YYYY-MM-DD");
     }
 
-    if (task.links && task.links.length > 0) {
+    if (settings.linksProperty && task.links && task.links.length > 0) {
         const links: string[] = []
         for (const link of task.links) {
             links.push(`[${link.description}](${link.link})`);
         }
-        elements["links"] = links
+        elements[settings.linksProperty] = links
     }
     
     if (task.notes) {

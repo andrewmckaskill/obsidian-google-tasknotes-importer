@@ -15,8 +15,11 @@ const DEFAULT_SETTINGS: GoogleTasksSettings = {
 	googleClientSecret: "",
 	importTaskList: "",
 	completeOnImport: true,
+	autoImport: false,
 	autoImportInterval: 300,
 	showNotice: true,
+	linksProperty: "links",
+	googleTaskIdProperty: "google-task-id"
 };
 
 export default class GoogleTasks extends Plugin {

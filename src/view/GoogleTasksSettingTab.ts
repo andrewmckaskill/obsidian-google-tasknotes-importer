@@ -154,6 +154,32 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 		}
 
 		new Setting(containerEl)
+				.setName("Custom Links Property")
+				.setDesc("Custom TaskNotes property (type: list) to store links in (e.g. from gmail, docs, sheets, etc).")
+				.addText((text) =>
+					text
+						.setPlaceholder("Enter links property")
+						.setValue(this.plugin.settings.linksProperty)
+						.onChange(async (value) => {
+							this.plugin.settings.linksProperty = value;
+							await this.plugin.saveSettings()
+						})
+				);
+		
+		new Setting(containerEl)
+				.setName("Custom Google Task Id Property")
+				.setDesc("Custom TaskNotes property (type:string) to store a link to the original google task in")
+				.addText((text) =>
+					text
+						.setPlaceholder("Enter google task id property")
+						.setValue(this.plugin.settings.googleTaskIdProperty)
+						.onChange(async (value) => {
+							this.plugin.settings.googleTaskIdProperty = value;
+							await this.plugin.saveSettings()
+						})
+				);
+
+		new Setting(containerEl)
 			.setName("Notifications")
 			.setDesc("Show notifications of info and errors")
 			.addToggle((toggle) => {

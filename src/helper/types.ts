@@ -9,6 +9,8 @@ export interface GoogleTasksSettings {
 	autoImport: boolean;
 	autoImportInterval: number;
 	showNotice: boolean;
+	linksProperty: string;
+	googleTaskIdProperty: string;
 }
 
 export interface TaskList {
@@ -27,6 +29,7 @@ export interface Task {
 	title: string;
 	updated: string;
 	selfLink: string;
+	webViewLink: string;
 	parent?: string;
 	position: string;
 	notes: string;

@@ -15,7 +15,9 @@ export async function importTasks(
     }
 
     const tasks = await getAllTasksFromList(plugin, plugin.settings.importTaskList, null, null, false)
-    const notes: Record<string, unknown>[] = tasks.map(taskToTaskNote)
+    const notes: Record<string, unknown>[] = tasks.map((task) => {
+        return taskToTaskNote(plugin.settings, task)
+    })
 
 
     for (let index = 0; index < notes.length; index++) {

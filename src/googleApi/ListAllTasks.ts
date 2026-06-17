@@ -111,10 +111,6 @@ export async function getAllTasksFromList(
 				url += `&dueMax=${endDate.add(1,"day").local().endOf('day').toISOString()}`;
 			}
 
-			if (plugin.showHidden) {
-				url += "&showHidden=true";
-			}
-
 			if (allTasksData?.nextPageToken) {
 				url += `&pageToken=${allTasksData.nextPageToken}`;
 			}
