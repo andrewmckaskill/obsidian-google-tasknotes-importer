@@ -28,7 +28,7 @@ export async function importTasks(
 
     if (plugin.settings.completeOnImport) {
         tasks.forEach((task) => {
-            console.log(`${PLUGIN_ID}: deleting task ${task.id}: ${task.title}`)
+            console.log(`${PLUGIN_ID}: completing task ${task.id}: ${task.title}`)
             GoogleCompleteTask(plugin, task);
         })
     }

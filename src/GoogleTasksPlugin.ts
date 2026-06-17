@@ -6,6 +6,7 @@ import {
 } from "./view/GoogleTasksSettingTab";
 import { TaskNotesBridge } from "./helper/TaskNotesBridge";
 import { importTasks } from "./helper/ImportTasks";
+import { AutoImporter } from "./helper/AutoImporter";
 
 
 const DEFAULT_SETTINGS: GoogleTasksSettings = {
@@ -14,7 +15,7 @@ const DEFAULT_SETTINGS: GoogleTasksSettings = {
 	googleClientSecret: "",
 	importTaskList: "",
 	completeOnImport: true,
-	refreshInterval: 300,
+	autoImportInterval: 300,
 	showNotice: true,
 };
 
@@ -22,14 +23,23 @@ export default class GoogleTasks extends Plugin {
 	settings!: GoogleTasksSettings;
 	plugin!: GoogleTasks;
 	taskNotes!: TaskNotesBridge;
-	showHidden = false;
+	autoImporter!: AutoImporter;
 	
 
 	async onload() {
 		await this.loadSettings();
 		this.plugin = this;
 		this.taskNotes = new TaskNotesBridge(this.app);
+		this.autoImporter = new AutoImporter(this)
 		
+	    this.app.workspace.onLayoutReady(() => {
+	        if (settingsAreCompleteAndLoggedIn(this, false) &&
+				this.settings.autoImport) {
+					this.autoImporter.start();
+				}
+	    });
+    
+
 		this.addCommand({
 			id: "import-google-tasks-to-tasknotes",
 			name: "Import Tasks",
@@ -65,6 +75,10 @@ export default class GoogleTasks extends Plugin {
 		});
 
 		this.addSettingTab(new GoogleTasksSettingTab(this.app, this));
+	}
+
+	async onunload() {
+		this.autoImporter.stop()
 	}
 
 

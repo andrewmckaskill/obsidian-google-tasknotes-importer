@@ -53,6 +53,7 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 						this.plugin.settings.googleClientSecret = value;
 						await this.plugin.saveSettings();
 						refreshTaskLists()
+						this.plugin.autoImporter.refresh()
 					})
 			);
 
@@ -64,6 +65,7 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 				this.plugin.settings.googleRefreshToken = "";
 				await this.plugin.saveSettings();
 				ClearTokens();
+				this.plugin.autoImporter.refresh()
 				this.display();
 			});
 		};
@@ -80,7 +82,9 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 					button.setButtonText("Login");
 					button.onClick(async () => {
 						if (settingsAreCorrect(this.plugin)) {
-							LoginGoogle(this.plugin).then(refreshTaskLists);
+							LoginGoogle(this.plugin)
+								.then(refreshTaskLists)
+								.then(this.plugin.autoImporter.refresh)
 
 							let count = 0;
 							const intId = setInterval(() => {
@@ -107,11 +111,13 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 						.setValue(this.plugin.settings.googleRefreshToken)
 						.onChange(async (value) => {
 							this.plugin.settings.googleRefreshToken = value;
-							await this.plugin.saveSettings();
+							await this.plugin.saveSettings()
+							this.plugin.autoImporter.refresh()
 						})
 				);
 		}
 
+		
 		const taskListSetting = new Setting(containerEl)
 			.setName("Task List To Import From")
 			.setDesc("Select the task list to import tasks from")
@@ -135,16 +141,16 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 				return
 			}
 
-			const tasks: { [index:string]: string } = {};
+			const options: { [index:string]: string } = {};
 			const taskLists = await getAllTaskLists(this.plugin)
 			for (const taskList of taskLists) {
-				tasks[taskList.id] = taskList.title;
+				options[taskList.id] = taskList.title;
 			}
 			if (this.plugin.settings.importTaskList === "") {
 				this.plugin.settings.importTaskList = taskLists[0].id
 			}
 			ctrl.selectEl.empty()
-			ctrl.addOptions(tasks)
+			ctrl.addOptions(options)
 		}
 
 		new Setting(containerEl)
@@ -158,28 +164,36 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 				});
 			});
 
-		const RefreshIntervalInput = customSetting(
+		new Setting(containerEl)
+			.setName("Auto-Import")
+			.setDesc("Automatically import tasks in the background")
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.autoImport);
+				toggle.onChange(async (state) => {
+					this.plugin.settings.autoImport = state;
+					await this.plugin.saveSettings();
+					this.plugin.autoImporter.refresh();
+				});
+			});
+
+
+		const AutoImportInterval = customSetting(
 			containerEl,
-			"Refresh Interval",
-			"Time in seconds between refresh request from google server"
+			"Auto-Import Interval",
+			"Time in seconds between auto-import attempts"
 		).createEl("input", {
 			type: "number",
 		});
-		RefreshIntervalInput.value = this.plugin.settings.refreshInterval + "";
-		RefreshIntervalInput.min = "10";
-		RefreshIntervalInput.step = "1";
-		RefreshIntervalInput.addEventListener("input", async () => {
-			this.plugin.settings.refreshInterval = parseInt(
-				RefreshIntervalInput.value
+		AutoImportInterval.value = this.plugin.settings.autoImportInterval + "";
+		AutoImportInterval.min = "10";
+		AutoImportInterval.step = "1";
+		AutoImportInterval.addEventListener("input", async () => {
+			this.plugin.settings.autoImportInterval = parseInt(
+				AutoImportInterval.value
 			);
-			// this.app.workspace
-			// 	.getLeavesOfType(VIEW_TYPE_GOOGLE_TASK)
-			// 	.forEach((leaf) => {
-			// 		if (leaf.view instanceof GoogleTaskView) {
-			// 			leaf.view.setRefreshInterval();
-			// 		}
-			// 	});
+			
 			await this.plugin.saveSettings();
+			this.plugin.autoImporter.refresh();
 		});
 
 		refreshTaskLists();

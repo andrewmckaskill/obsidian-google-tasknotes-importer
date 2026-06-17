@@ -6,7 +6,8 @@ export interface GoogleTasksSettings {
 	googleClientSecret: string;
 	importTaskList: string;
 	completeOnImport: boolean;
-	refreshInterval: number;
+	autoImport: boolean;
+	autoImportInterval: number;
 	showNotice: boolean;
 }
 
