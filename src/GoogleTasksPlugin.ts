@@ -44,7 +44,7 @@ export default class GoogleTasks extends Plugin {
     
 
 		this.addCommand({
-			id: "import-google-tasks-to-tasknotes",
+			id: "import-tasks",
 			name: "Import Tasks",
 
 			callback: () => {

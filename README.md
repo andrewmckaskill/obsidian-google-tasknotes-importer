@@ -1,16 +1,15 @@
-# Obsidian Google Tasks TaskNotes Importer
+# Obsidian Google TaskNotes Importer
 
-Import your Google Tasks into Obsidian using TaskNotes style
+Import your Google Tasks into Obsidian using TaskNotes style.
 
 This is a fork of the original (obsidian-google-tasks)[https://github.com/YukiGasai/obsidian-google-tasks] plugin by YukiGasai, with various changes added from other forks.
 
 ## Features
 
--   List tasks
--   Create tasks
--   Edit tasks (Will create a new task and delete the old one)
--   Mark as done / todo
--   Delete done tasks
+-   Import tasks from Google tasks
+-   Includes reference to original google task
+-   Includes link to associated email (so you can use the "add to tasks" feature of gmail)
+-   Auto Import in background
 
 > Working with specific time is not supported by the Google API :(
 
@@ -43,28 +42,34 @@ This is a fork of the original (obsidian-google-tasks)[https://github.com/YukiGa
 
 ## Usage
 
-### Google Task View
-
--   Open view by pressing the checkmark icon in the left sidebar
--   View will open and list your tasks
-    -   Complete them by clicking the checkbox
-    -   Edit them by long clicking the task
-    -   Show and hide the todo and done list by pressing the title texts
-    -   Force update the list by pressing on Google Tasks
-    -   The list will check for changes in a set interval (changeable in settings)
-    -   Press the plus button to create a new task
-    -   Use the dropdown to switch between lists
-
 ### Commands
 
-#### List Google Tasks
+#### Import Tasks
 
-Shows a list of all undone tasks selecting one will complete the task
+Will create a new TaskNotes task for each un-completed task.
 
-#### Create Google Tasks
+### Custom Properties
 
-Will open a popup to create a new task
+To store a link to the original email (for gmail originated tasks) or the google task, you need to create a custom user property in TaskNotes.
 
-#### Insert Google Tasks
+1. Open the TaskNotes plugin settings, and go to the "Task Properties" tab
+2. At the bottom, add new custom user fields. (See example configuration below.)
+3. If you want to display the link on the task card, go to the "Appearance & UI" tab
+    - Click the "Configure" button to change the default fields
+    - Scroll to the bottom and tick on your new custom fields
 
-Will insert a lost of all undone tasks into the current file. Checking the task inside the File will complete / incomplete it.
+#### Default Property Settings
+
+These are the settings you should use to start with. Feel free to change the names, but the types must stay the same or the import won't work.
+
+    Display Name: Links
+    Property Key: links
+    Type: list
+        
+    Display Name: Google Task
+    Property Key: google-task-id
+    Type: string
+
+If you change the property key of the field you will need to change the associated setting in the Google TaskNotes Importer settings page.
+
+If the property you entered doesn't exist, TaskNotes will create the TaskNote fine, but it won't populate that field.

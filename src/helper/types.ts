@@ -1,4 +1,4 @@
-export const PLUGIN_ID = "google-tasks-tasknotes" 
+export const PLUGIN_ID = "google-tasknotes-importer" 
 
 export interface GoogleTasksSettings {
 	googleRefreshToken: string;

@@ -27,7 +27,7 @@ export class GoogleTasksSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "Settings for Google Tasks TaskNotes" });
+		containerEl.createEl("h2", { text: "Settings for Google TaskNotes Importer" });
 
 		new Setting(containerEl)
 			.setName("ClientId")
