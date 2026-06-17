@@ -1,5 +1,7 @@
+import { PLUGIN_ID } from "./types";
+
 const prefix = (varName: string): string => {
-  return `${app.appId}-google-tasks-tasknotes-${varName}`;
+  return `${app.appId}-${PLUGIN_ID}-${varName}`;
 }
 
 export const getAT = (): string => {

@@ -1,5 +1,5 @@
 import { Editor, MarkdownFileInfo, Plugin, Notice} from "obsidian";
-import type { GoogleTasksSettings } from "./helper/types";
+import { type GoogleTasksSettings, PLUGIN_ID } from "./helper/types";
 import { getAllTasksFromList } from "./googleApi/ListAllTasks";
 import {
 	GoogleCompleteTask,
@@ -37,15 +37,15 @@ export default class GoogleTasks extends Plugin {
 			const tasks = await getAllTasksFromList(this, this.plugin.settings.importTaskList, null, null, false)
 			const taskLines = tasks.map(taskToList)
 		
-			const importButton = "`BUTTON[import-google-tasks-tasknotes]`"
+			const importButton = "`" + `BUTTON[import-${PLUGIN_ID}]` + "`"
 			const editorContent = editor.getValue();
 
 			if (editorContent.includes(importButton)) {
-				console.log("google-tasks-tasknotes: insert near button")
+				console.log(`${PLUGIN_ID}: insert near button`)
 				const updatedContent = editorContent.replace(importButton, importButton + "\n" + taskLines.join("").trimEnd());
 				editor.setValue(updatedContent);
 			} else {
-				console.log("google-tasks-tasknotes: insert at cursor")
+				console.log(`${PLUGIN_ID}: insert at cursor`)
 				const cursor = editor.getCursor()
 				cursor.ch = 0
 				editor.replaceRange(taskLines.join(""), cursor)	
@@ -53,12 +53,12 @@ export default class GoogleTasks extends Plugin {
 
 			if (this.plugin.settings.completeOnImport) {
 				tasks.forEach((task) => {
-					console.log(`google-tasks-tasknotes: deleting task ${task.id}: ${task.title}`)
+					console.log(`${PLUGIN_ID}: deleting task ${task.id}: ${task.title}`)
 					GoogleCompleteTask(this, task);
 				})
 			}
 			else {
-				console.log(`google-tasks-tasknotes: skipping delete`)
+				console.log(`${PLUGIN_ID}: skipping delete`)
 			} 
 		};
 
